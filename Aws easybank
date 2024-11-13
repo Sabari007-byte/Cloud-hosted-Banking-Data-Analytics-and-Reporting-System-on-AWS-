@@ -1,0 +1,59 @@
+CREATE DATABASE easy_bank;
+
+USE easy_bank;
+
+CREATE TABLE Users (
+
+    user_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+
+    username VARCHAR(255) NOT NULL,
+
+    email VARCHAR(255) NOT NULL
+
+);
+
+CREATE TABLE accounts (
+
+    user_id INT NOT NULL,
+
+    account_type ENUM('Savings', 'Business') NOT NULL,
+
+    balance DECIMAL(15,2) DEFAULT 0.00,
+
+    account_status ENUM('Active', 'Closed', 'Frozen') DEFAULT 'Active',
+
+    opened_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    full_name VARCHAR(255),
+
+    PRIMARY KEY (user_id),
+
+    FOREIGN KEY (user_id) REFERENCES Users(user_id)
+
+);
+
+CREATE TABLE account_statements (
+
+  statement_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+
+  user_id INT,
+
+  transaction_type ENUM('Credit', 'Debit') NOT NULL,
+
+  transaction_amount DECIMAL(15,2) NOT NULL,
+
+  transaction_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+  description TEXT,
+
+  from_account_id INT,
+
+  to_account_id INT,
+
+  FOREIGN KEY (user_id) REFERENCES Users(user_id),
+
+  FOREIGN KEY (from_account_id) REFERENCES accounts(user_id),
+
+  FOREIGN KEY (to_account_id) REFERENCES accounts(user_id)
+
+);
